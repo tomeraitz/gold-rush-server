@@ -12,9 +12,11 @@ export class GoldRushGameService extends GameEngineLogicService {
 
   endGameStatus(state: any): any {
     const { player1, player2 } = state;
-    if (player1.score > player2.score) return { endGameStatus: 'you won!' };
-    if (player1.score < player2.score) return { endGameStatus: 'you lost!' };
-    else return { endGameStatus: `it's a draw` };
+    if (player1.score > player2.score)
+      return { endGameStatus: 'you won!', player1, player2 };
+    if (player1.score < player2.score)
+      return { endGameStatus: 'you lost!', player1, player2 };
+    else return { endGameStatus: `it's a draw`, player1, player2 };
   }
 
   checkIfCanGoRight(playerIndex: number, index: number): boolean {

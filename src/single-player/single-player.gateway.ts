@@ -20,6 +20,12 @@ export class SinglePlayerGateway implements OnGatewayInit {
     this.logger.log('Init');
   }
 
+  handleDisconnect(client: Socket) {
+    const id = client.id.split('#')[1];
+    this.logger.log(`${id} disconnected`);
+    this.goldRushGameController.StopGameEngine({ client });
+  }
+
   handleConnection(client: Socket) {
     const id = client.id.split('#')[1];
     this.logger.log(`${id} connoted`);
@@ -32,11 +38,15 @@ export class SinglePlayerGateway implements OnGatewayInit {
   // @SubscribeMessage('messageToServer')
   sendClient(client: Socket, message: string) {
     // this.logger.log(message);
+    message['level'] = client.level;
     client.emit('messageToClient', message);
   }
 
   @SubscribeMessage('messageToServer')
-  getFromClient(client: Socket, message: { funcName: string; player: string }) {
+  getFromClient(
+    client: Socket,
+    message: { funcName: string; player: string; endGameStatus: string },
+  ) {
     const socketObject = { func: this.sendClient.bind(this), client };
     if (message.funcName.includes('move'))
       this.goldRushGameController.playerMove(
@@ -44,5 +54,12 @@ export class SinglePlayerGateway implements OnGatewayInit {
         message.funcName,
         message.player,
       );
+    if (message.funcName === 'nextLevel') {
+      if (!message.endGameStatus.includes('won')) client.level -= 1;
+      this.goldRushGameController.startGame({
+        func: this.sendClient.bind(this),
+        client,
+      });
+    }
   }
 }

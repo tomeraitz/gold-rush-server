@@ -4,12 +4,12 @@ import { Logger } from '@nestjs/common';
 
 @Controller('gold-rush-game')
 export class GoldRushGameController {
-  private gameInterval: any = null;
   private logger: Logger = new Logger('gold-rush-game-controller');
   constructor(private readonly goldRushGameService: GoldRushGameService) {}
 
   playerMove = (socketObject: any, moveDirection: string, player: string) => {
     const { func, client } = socketObject;
+    if (client.endGame) return;
     const state = this.goldRushGameService[moveDirection](client.state, player);
     client.state = { ...state };
     func(client, client.state);
@@ -37,7 +37,7 @@ export class GoldRushGameController {
         ? client.gameSpeed - 50
         : 200
       : 1000;
-    this.gameInterval = setInterval(() => {
+    client.gameInterval = setInterval(() => {
       this.startGameEngine(socketObject);
     }, client.gameSpeed);
     return client.state;
@@ -48,9 +48,9 @@ export class GoldRushGameController {
   StopGameEngine(socketObject: any): any {
     const { client } = socketObject;
     if (client.endGame) {
-      clearInterval(this.gameInterval);
+      clearInterval(client.gameInterval);
       // For testing
-      this.gameInterval = null;
+      client.gameInterval = null;
       // setTimeout(() => {
       //   this.startGame(socketObject);
       // }, 200);
