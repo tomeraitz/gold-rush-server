@@ -111,6 +111,26 @@ export class GoldRushGameService extends GameEngineLogicService {
         index + this.colum !== secondIndex
       )
         isAllowed = false;
+      if (
+        gridArray[index + this.colum + 1] &&
+        gridArray[index + this.colum + 1].value === 'block'
+      )
+        isAllowed = false;
+      if (
+        gridArray[index - this.colum - 1] &&
+        gridArray[index - this.colum - 1].value === 'block'
+      )
+        isAllowed = false;
+      if (
+        gridArray[index + this.colum - 1] &&
+        gridArray[index + this.colum - 1].value === 'block'
+      )
+        isAllowed = false;
+      if (
+        gridArray[index - this.colum + 1] &&
+        gridArray[index - this.colum + 1].value === 'block'
+      )
+        isAllowed = false;
     });
     return isAllowed;
   }

@@ -24,7 +24,7 @@ export class GoldRushGameController {
   };
 
   async startGame(socketObject: any) {
-    const { func, client } = socketObject;
+    const { func, client, isSpeedDecrease } = socketObject;
     client.level = this.findLevel(client);
     client.endGame = false;
     const state = await this.goldRushGameService.initializeState(client.level);
@@ -33,8 +33,10 @@ export class GoldRushGameController {
     if (client.gridPath) delete client.gridPath;
     await this.goldRushGameService.aStarMatrix(client);
     client.gameSpeed = client.gameSpeed
-      ? client.gameSpeed > 200
-        ? client.gameSpeed - 50
+      ? client.gameSpeed > 300
+        ? isSpeedDecrease
+          ? client.gameSpeed - 20
+          : client.gameSpeed
         : 200
       : 1000;
     client.gameInterval = setInterval(() => {

@@ -59,6 +59,7 @@ export class SinglePlayerGateway implements OnGatewayInit {
       this.goldRushGameController.startGame({
         func: this.sendClient.bind(this),
         client,
+        isSpeedDecrease: message.endGameStatus.includes('won'),
       });
     }
   }
