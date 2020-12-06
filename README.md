@@ -1,75 +1,115 @@
+[![Contributors][contributors-shield]][contributors-url]
+
+
+
+<!-- PROJECT LOGO -->
+<br />
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
+  <a href="https://github.com/tomeraitz/gold-rush-server">
+    <img src="./doc_images/gold-rush.ico" alt="Logo" width="80" height="80">
+  </a>
+
+  <h3 align="center">Gold Rush Server</h3>
+
+  <p align="center">
+  A Game Gold Rush - this repo is the server-side with nestjs.
+    <br />
+    <br />
+    <br />
+    <a href="https://gold-rush.netlify.app/">View Demo</a>
+    ·
+    <a href="https://github.com/tomeraitz/gold-rush-server/issues">Report Bug</a>
+  </p>
 </p>
 
-[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
-[travis-url]: https://travis-ci.org/nestjs/nest
-[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
-[linux-url]: https://travis-ci.org/nestjs/nest
-  
-  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://api.travis-ci.org/nestjs/nest.svg?branch=master" alt="Travis" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://img.shields.io/travis/nestjs/nest/master.svg?label=linux" alt="Linux" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#5" alt="Coverage" /></a>
-<a href="https://gitter.im/nestjs/nestjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge"><img src="https://badges.gitter.im/nestjs/nestjs.svg" alt="Gitter" /></a>
-<a href="https://opencollective.com/nest#backer"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec"><img src="https://img.shields.io/badge/Donate-PayPal-dc3d53.svg"/></a>
-  <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+<!-- TABLE OF CONTENTS -->
+<details open="open">
+  <summary><h2 style="display: inline-block">Contents</h2></summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#File">File Hierarchy</a></li>
+    <li><a href="#acknowledgements">Acknowledgements</a></li>
+  </ol>
+</details>
 
-## Installation
 
-```bash
-$ npm install
-```
 
-## Running the app
+<!-- ABOUT THE PROJECT -->
+## About The Project
 
-```bash
-# development
-$ npm run start
+<img src="./doc_images/gold-rush.gif" />
+This Repository is server-side, here we can find the logic that controls the game with WebSocket.
+### Built With
 
-# watch mode
-$ npm run start:dev
+* [Nest.js](https://nestjs.com/)
+* [nestjs/websockets](https://www.npmjs.com/package/@nestjs/websockets)
+* [PathFinding.js](https://www.npmjs.com/package/pathfinding)
 
-# production mode
-$ npm run start:prod
-```
+## Getting Started
+To get a local copy up and running follow these simple steps.
 
-## Test
+### Prerequisites
+If you want to control the project from nest.js cli I suggest you install nest.js first: 
+* npm
+  ```sh
+  npm i -g @nestjs/cli
+  ```
 
-```bash
-# unit tests
-$ npm run test
+### Installation
 
-# e2e tests
-$ npm run test:e2e
+1. Clone the repo
+   ```sh
+   git clone https://github.com/tomeraitz/gold-rush-server.git
+   ```
+2. Install NPM packages
+   ```sh
+   npm install
+   ```
+3. Run It on localhost with client repository(8000)
+    ```sh
+   npm run start:dev 
+   ```
+**Note!** This project won't do a lot without the [client side](https://github.com/tomeraitz/gold-rush-client).
 
-# test coverage
-$ npm run test:cov
-```
+4. Run It on localhost with test environment(8000) 
+    ```sh
+   npm run start:debug 
+   ```
+**Note!** This is only a simple UI to check if the functions work.
 
-## Support
+<!-- USAGE EXAMPLES -->
+<h3 id="File">File Hierarchy</h3>
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+**src**
+  - main.ts - Activate the server
+  - app.modules.ts - Import all the main modules.
+  - app.controller.ts - The default get request.
+-  **single-player**
+    - single-player.gateway.ts - The script that Activates the WebSocket.
+    - single-player.modules.ts - Import the game module.
+-  **gold-rush-game**
+    - gold-rush-game-logic.service.ts - Inside it's all the computer calculation movement.
+    - gold-rush-game.controller.ts - This script receives and gives back data from WebSocket.
+    - gold-rush-game.module.ts - Import the game module and websocket module.
+    - gold-rush-game.service.ts - This script is handled with all the user inputs and creates the game data.
+## Acknowledgements
 
-## Stay in touch
+* The project live at [Heroku](https://devcenter.heroku.com/)
+* The Read me file was created with the template [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-  Nest is [MIT licensed](LICENSE).
+[contributors-shield]: https://img.shields.io/github/contributors/tomeraitz/gold-rush-server?color=green&style=for-the-badge
+[contributors-url]: https://github.com/tomeraitz/gold-rush-server/graphs/contributors
