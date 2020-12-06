@@ -26,7 +26,7 @@
 
 <!-- TABLE OF CONTENTS -->
 <details open="open">
-  <summary><h2 style="display: inline-block">Contents</h2></summary>
+  <summary><h2 style="display: inline-block">Content</h2></summary>
   <ol>
     <li>
       <a href="#about-the-project">About The Project</a>
@@ -53,6 +53,7 @@
 
 <img src="./doc_images/gold-rush.gif" />
 This Repository is server-side, here we can find the logic that controls the game with WebSocket.
+
 ### Built With
 
 * [Nest.js](https://nestjs.com/)
