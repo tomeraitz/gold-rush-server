@@ -12,16 +12,24 @@ export class GoldRushGameController {
     if (client.endGame) return;
     const state = this.goldRushGameService[moveDirection](client.state, player);
     client.state = { ...state };
-    func(client, client.state);
+    func && func(client, client.state);
     if (this.goldRushGameService.checkIfGameEnded(client.state)) {
       client.endGame = true;
       this.StopGameEngine(socketObject);
       // eslint-disable-next-line prettier/prettier
       const endGameStatus = this.goldRushGameService.endGameStatus(client.state);
-      func(client, endGameStatus);
+      func && func(client, endGameStatus);
+      return endGameStatus;
     }
     return client.state;
   };
+
+  async startGameMultiGame(socket: any) {
+    socket.endGame = false;
+    const state = await this.goldRushGameService.initializeState(10);
+    socket.state = { ...state };
+    return socket.state;
+  }
 
   async startGame(socketObject: any) {
     const { func, client, isSpeedDecrease } = socketObject;

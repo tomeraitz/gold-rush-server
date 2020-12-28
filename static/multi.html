@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Websockets Client</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<style>
+    #grid {
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        grid-template-rows: repeat(8, 1fr);
+        height: 90vh;
+    }
+    .player1{
+        background-color: black;
+        border-radius: 50%;
+        width: 50%;
+    }
+    .player2{
+        background-color: blue;
+        border-radius: 50%;
+        width: 50%;
+    }
+    .coin{
+        background-color: green;
+        border-radius: 70%;
+        width: 50%;
+    }
+    .block{
+        background-color: brown;
+    }
+</style>
+
+<body>
+    <div id="v-app">
+        <div id="grid">
+            <template   v-for="(item,i) of messages.gridArray"><div :class="item.value">{{i}}</div></template >
+        </div>
+    </div>
+    <script>
+        const keyCodeList = {
+        38 : 'moveUp',
+        39: 'moveRight',
+        40 : 'moveDown',
+        37 : 'moveLeft'
+        }
+        var app = new Vue({
+            el: '#v-app',
+            data: {
+                player: 'player1',
+                messages: {},
+                socket: null,
+            },
+            methods: {
+                handleUserKeyPress(e) {
+                    const serverData = {
+                        player: this.player,
+                        funcName: keyCodeList[e.keyCode]
+                    }
+                    this.socket.emit('messageToServer', serverData);
+                },
+                receiveMessage(msg) {
+                    console.log(msg);
+                    this.messages = {...msg};
+                }
+            },
+             created() {
+                const startConnection = async ()=>{
+                    const res = await axios.get('http://localhost:8000/CreateRoom');
+                    const id = res.data.roomId;
+                    this.player = res.data.player;
+                    console.log("res: " , res.data.roomId)
+                    this.socket = io('http://localhost:8000/multiPlayer');
+                    window.addEventListener('keydown', this.handleUserKeyPress);
+                    this.socket.on('messageToClient', (msg) => {
+                        this.receiveMessage(msg);
+                        if(msg.connected){
+                            const data = {funcName : "join", id}
+                            this.socket.emit('messageToServer', data);
+                        }
+                    });
+                 }
+                 startConnection();
+  
+            }
+        });
+    </script>
+</body>
+
+</html>
