@@ -52,13 +52,23 @@ export class MultiPlayerGateway implements OnGatewayInit {
       case 'join':
         if (!message.id) return;
         else {
-          socket.roomId = `${message.id}`;
-          socket.join(`${message.id}`);
-          const roomJoin = this.wss.adapter.rooms[`${socket.roomId}`];
-          socket.emit('messageToClient', {
-            room: message.id,
-            canPlay: roomJoin.length > 1,
-          });
+          const roomJoin = this.wss.adapter.rooms[`${message.id}`];
+          let error = false;
+          if (!roomJoin) error = false;
+          else if (roomJoin && roomJoin.length < 2) error = false;
+          else error = true;
+          if (!error) {
+            socket.roomId = `${message.id}`;
+            socket.join(`${message.id}`);
+            socket.emit('messageToClient', {
+              room: message.id,
+              canPlay: this.wss.adapter.rooms[`${message.id}`].length > 1,
+            });
+          } else {
+            socket.emit('messageToClient', {
+              error: 'too many users in the room',
+            });
+          }
         }
         break;
       case 'readyToPlay':
