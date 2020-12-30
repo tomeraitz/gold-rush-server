@@ -10,7 +10,7 @@ export class AppController {
   @Get('CreateRoom')
   CreateRoom(): { roomId: string; player: string } {
     return {
-      roomId: Math.random().toString(36).substring(2),
+      roomId: (Math.random() + 1).toString(36).substring(2),
       player: 'player1',
     };
   }
