@@ -45,43 +45,53 @@ export class MultiPlayerGateway implements OnGatewayInit {
       id: number;
     },
   ) {
-    // this.logger.log(message);
-    if (message.funcName === 'join') {
-      if (!message.id) return;
-      else {
-        socket.roomId = `${message.id}`;
-        socket.join(`${message.id}`);
-        const room = this.wss.adapter.rooms[`${socket.roomId}`];
-        socket.emit('messageToClient', {
-          room: message.id,
-          canPlay: room.length > 1,
-        });
-      }
-    }
-    const room = this.wss.adapter.rooms[`${socket.roomId}`];
-    if (message.funcName === 'readyToPlay') {
-      const state = await this.goldRushGameController.startGameMultiGame(room);
-      this.sedToRoom(`${socket.roomId}`, state);
-    }
-    const socketObject = { func: null, client: room };
-    if (message.funcName.includes('move')) {
-      // this.logger.log(room);
-      const state = this.goldRushGameController.playerMove(
-        socketObject,
-        message.funcName,
-        message.player,
-      );
-      this.logger.log(state);
-      this.sedToRoom(`${socket.roomId}`, state);
-    }
+    const expression = message.funcName.includes('move')
+      ? 'move'
+      : message.funcName;
+    switch (expression) {
+      case 'join':
+        if (!message.id) return;
+        else {
+          socket.roomId = `${message.id}`;
+          socket.join(`${message.id}`);
+          const roomJoin = this.wss.adapter.rooms[`${socket.roomId}`];
+          socket.emit('messageToClient', {
+            room: message.id,
+            canPlay: roomJoin.length > 1,
+          });
+        }
+        break;
+      case 'readyToPlay':
+        const roomPaly = this.wss.adapter.rooms[`${socket.roomId}`];
+        const statePlay = await this.goldRushGameController.startGameMultiGame(
+          roomPaly,
+        );
+        this.sedToRoom(`${socket.roomId}`, statePlay);
+        break;
+      case 'move':
+        const roomMove = this.wss.adapter.rooms[`${socket.roomId}`];
+        const socketObject = { func: null, client: roomMove };
+        const stateMove = this.goldRushGameController.playerMove(
+          socketObject,
+          message.funcName,
+          message.player,
+        );
+        if (!stateMove.endGameStatus)
+          this.sedToRoom(`${socket.roomId}`, stateMove);
+        else {
+          Object.keys(roomMove.sockets).forEach((socketId, index) => {
+            if (index > 0) {
+              if (stateMove.endGameStatus.includes('won'))
+                stateMove.endGameStatus = 'you lost!';
+              else if (stateMove.endGameStatus.includes('lost'))
+                stateMove.endGameStatus = 'you won!';
+            }
+            this.wss.to(socketId).emit('messageToClient', stateMove);
+          });
+        }
 
-    // if (message.funcName === 'nextLevel') {
-    //   if (!message.endGameStatus.includes('won')) client.level -= 1;
-    //   this.goldRushGameController.startGame({
-    //     func: this.sedToRoom.bind(this),
-    //     client,
-    //     isSpeedDecrease: message.endGameStatus.includes('won'),
-    //   });
-    // }
+      default:
+        break;
+    }
   }
 }
