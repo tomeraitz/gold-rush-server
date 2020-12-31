@@ -31,6 +31,10 @@ export class MultiPlayerGateway implements OnGatewayInit {
     client.emit('messageToClient', { connected: true });
   }
 
+  findRoom(id: string): boolean {
+    return !!this.wss.adapter.rooms[id];
+  }
+
   sedToRoom(roomId: string, message: any) {
     this.wss.to(roomId).emit('messageToClient', message);
   }

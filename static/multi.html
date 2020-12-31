@@ -84,6 +84,10 @@
                             const data = {funcName : "join", id}
                             this.socket.emit('messageToServer', data);
                         }
+                        if(msg.connected){
+                            const data = {funcName : "join", id}
+                            this.socket.emit('messageToServer', data);
+                        }
                     });
                  }
                  startConnection();
