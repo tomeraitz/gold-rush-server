@@ -64,7 +64,7 @@ export class MultiPlayerGateway implements OnGatewayInit {
           if (!error) {
             socket.roomId = `${message.id}`;
             socket.join(`${message.id}`);
-            socket.emit('messageToClient', {
+            this.sedToRoom(`${socket.roomId}`, {
               room: message.id,
               canPlay: this.wss.adapter.rooms[`${message.id}`].length > 1,
             });
@@ -77,6 +77,7 @@ export class MultiPlayerGateway implements OnGatewayInit {
         break;
       case 'readyToPlay':
         const roomPaly = this.wss.adapter.rooms[`${socket.roomId}`];
+        console.log('In readyToPlay');
         const statePlay = await this.goldRushGameController.startGameMultiGame(
           roomPaly,
         );
