@@ -21,10 +21,13 @@ export class AppController {
   joinRoom(
     @Param('id') id,
   ): { roomId?: string; player?: string; error?: string } {
-    if (this.multiPlayerGateway.findRoom(id)) {
+    const room = this.multiPlayerGateway.findRoom(id);
+    if (room && room.length < 2) {
       return { roomId: id, player: 'player2' };
-    } else {
+    } else if (!room) {
       return { error: `id doesn't exist` };
+    } else if (room.length === 2) {
+      return { error: `The room is full` };
     }
   }
 }

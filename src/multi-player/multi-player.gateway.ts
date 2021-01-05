@@ -23,6 +23,9 @@ export class MultiPlayerGateway implements OnGatewayInit {
   handleDisconnect(client: Socket) {
     const id = client.id.split('#')[1];
     this.logger.log(`${id} disconnected`);
+    const room = this.findRoom(client.roomId);
+    this.sedToRoom(`${client.roomId}`, { userLeft: true });
+    if (room) room.userLeft = true;
   }
 
   handleConnection(client: Socket) {
@@ -31,8 +34,8 @@ export class MultiPlayerGateway implements OnGatewayInit {
     client.emit('messageToClient', { connected: true });
   }
 
-  findRoom(id: string): boolean {
-    return !!this.wss.adapter.rooms[id];
+  findRoom(id: string): any {
+    return this.wss.adapter.rooms[id];
   }
 
   sedToRoom(roomId: string, message: any) {
@@ -77,7 +80,10 @@ export class MultiPlayerGateway implements OnGatewayInit {
         break;
       case 'readyToPlay':
         const roomPaly = this.wss.adapter.rooms[`${socket.roomId}`];
-        console.log('In readyToPlay');
+        if (roomPaly.userLeft) {
+          this.sedToRoom(`${socket.roomId}`, { userLeft: true });
+          return;
+        }
         if (!roomPaly.readyToPlay) {
           roomPaly.readyToPlay = 1;
         } else {
@@ -93,6 +99,10 @@ export class MultiPlayerGateway implements OnGatewayInit {
         break;
       case 'move':
         const roomMove = this.wss.adapter.rooms[`${socket.roomId}`];
+        if (roomMove.userLeft) {
+          this.sedToRoom(`${socket.roomId}`, { userLeft: true });
+          return;
+        }
         const socketObject = { func: null, client: roomMove };
         const stateMove = this.goldRushGameController.playerMove(
           socketObject,
